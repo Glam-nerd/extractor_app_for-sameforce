@@ -5,7 +5,7 @@ from googleapiclient.http import MediaIoBaseUpload
 import streamlit as st
 import pandas as pd
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 # load_dotenv()  
 
