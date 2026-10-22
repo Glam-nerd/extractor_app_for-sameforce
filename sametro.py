@@ -32,7 +32,7 @@ def get_gdrive_credentials():
     )
 
 st.set_page_config(
-    page_title="Sameforce Data Extractor & Mapper", page_icon="📊", layout="wide"
+    page_title="Sameforce Data Extractor & Mapper", page_icon="", layout="wide"
 )
 
 st.title("Sametro Field Converter")
