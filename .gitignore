@@ -1,0 +1,7 @@
+.env
+
+# Google Service Account keys & credentials
+*.json
+
+# Streamlit local secrets
+.streamlit/secrets.toml

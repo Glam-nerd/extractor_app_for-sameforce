@@ -2,10 +2,17 @@ import io
 import os
 import numpy as np
 import pandas as pd
+from dotenv import load_dotenv
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
 import streamlit as st
+
+load_dotenv()
+credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+creds = service_account.Credentials.from_service_account_file(
+    credentials_path, scopes=["https://www.googleapis.com/auth/drive"]
+)
 
 st.set_page_config(
     page_title="Analytics Data Preprocessor & Mapper", page_icon="📊", layout="wide"
