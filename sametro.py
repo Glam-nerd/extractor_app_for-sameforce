@@ -7,7 +7,7 @@ import pandas as pd
 import os
 from dotenv import load_dotenv
 
-
+# Load environment variables from .env file if present
 load_dotenv()
 def get_gdrive_credentials():
     # 1. Try loading from Streamlit Cloud secrets first
