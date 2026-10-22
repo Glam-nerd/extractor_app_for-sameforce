@@ -9,10 +9,27 @@ from googleapiclient.http import MediaIoBaseUpload
 import streamlit as st
 
 load_dotenv()
-credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-creds = service_account.Credentials.from_service_account_file(
-    credentials_path, scopes=["https://www.googleapis.com/auth/drive"]
-)
+def get_gdrive_credentials():
+    # 1. Try loading from Streamlit Cloud secrets first
+    try:
+        if "gcp_service_account" in st.secrets:
+            credentials_dict = dict(st.secrets["gcp_service_account"])
+            return service_account.Credentials.from_service_account_info(
+                credentials_dict, scopes=["https://www.googleapis.com/auth/drive"]
+            )
+    except Exception:
+        pass
+
+    # 2. Fall back to local .env file / environment variable path
+    credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+    if credentials_path and os.path.exists(credentials_path):
+        return service_account.Credentials.from_service_account_file(
+            credentials_path, scopes=["https://www.googleapis.com/auth/drive"]
+        )
+    
+    raise FileNotFoundError(
+        "Google Service Account credentials not found. Please configure st.secrets on Streamlit Cloud or your local .env file."
+    )
 
 st.set_page_config(
     page_title="Analytics Data Preprocessor & Mapper", page_icon="📊", layout="wide"
