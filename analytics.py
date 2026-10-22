@@ -25,8 +25,9 @@ with st.sidebar:
     st.divider()
     st.subheader("☁️ Cloud Archive")
     gdrive_enabled = st.checkbox("Enable Google Drive Backup")
+    today_str = pd.Timestamp.today().strftime("%Y-%m-%d")
     gdrive_file_name = st.text_input(
-        "Raw File Name in Drive", value="raw_uploaded_data.csv"
+        "Raw File Name in Drive", value=f"raw_uploaded_data_{today_str}.csv"
     )
     gdrive_folder_id = st.text_input(
         "Google Drive Folder ID (Optional)",
