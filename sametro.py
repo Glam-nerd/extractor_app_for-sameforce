@@ -46,8 +46,6 @@ with st.sidebar:
   uploaded_file = st.file_uploader(
       "Upload your data file (CSV or Excel)", type=["csv", "xlsx", "xls"]
   )
-  if uploaded_file.name.endswith(".csv"):
-        df = pd.read_csv(uploaded_file)
 
   # upload csv to my drive account
   gdrive_enabled = st.checkbox("Enable Google Drive Backup")
