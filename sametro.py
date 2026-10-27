@@ -46,6 +46,9 @@ with st.sidebar:
   uploaded_file = st.file_uploader(
       "Upload your data file (CSV or Excel)", type=["csv", "xlsx", "xls"]
   )
+  if uploaded_file.name.endswith(".csv"):
+        df = pd.read_csv(uploaded_file)
+
   # upload csv to my drive account
   gdrive_enabled = st.checkbox("Enable Google Drive Backup")
   gdrive_file_name = st.text_input(
@@ -120,6 +123,7 @@ if uploaded_file is not None:
         .str.replace(" ", "_")
         .str.replace("-", "_")
     )
+    st.write("Cleaned columns found in your file:", df.columns.tolist())
 
     # Define exact columns of interest and their target rename mapping
     column_mapping = {
@@ -129,12 +133,11 @@ if uploaded_file is not None:
         "saleorder_device_id": "order_id",
         "device": "device_name",
         "order_started_on": "order_date",
-        "agent_name": "agent_name",
+        "agent_full_name": "agent_name",
     }
 
-    ordered_sources = [
-        col for col in column_mapping.keys() if col in df.columns
-    ]
+    ordered_sources = [col for col in column_mapping.keys() if col in df.columns]
+    st.write("Columns successfully matched from your mapping:", ordered_sources)
 
     if ordered_sources:
       # Extract and rename columns preserving the exact specified order
