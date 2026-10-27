@@ -128,10 +128,10 @@ if uploaded_file is not None:
         "agent_username": "agent_id",
         "customer_full_name": "customer_name",
         "device_id": "device_id",
-        "saleorder_device_id": "order_id",
+        "sale_order_id": "order_id",
         "device": "device_name",
         "order_started_on": "order_date",
-        "agent_full_name": "agent_name",
+        "agent_full_name": "agent",
     }
 
     ordered_sources = [col for col in column_mapping.keys() if col in df.columns]
