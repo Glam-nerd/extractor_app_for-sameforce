@@ -36,7 +36,7 @@ st.set_page_config(
 )
 
 st.title("Sametro Field Converter")
-st.write("My custom app for converting downloaded CreditHive data into Sameforce standard format")
+st.write("My custom app for converting downloaded CreditHive data into standard format to upload unto the Sameforce platform.")
 st.divider()
 
 
@@ -121,7 +121,6 @@ if uploaded_file is not None:
         .str.replace(" ", "_")
         .str.replace("-", "_")
     )
-    st.write("Cleaned columns found in your file:", df.columns.tolist())
 
     # Define exact columns of interest and their target rename mapping
     column_mapping = {
@@ -134,12 +133,27 @@ if uploaded_file is not None:
         "agent_full_name": "agent",
     }
 
+    type_mapping = {
+    "agent_id": "string",
+    "customer_name": "string",
+    "device_id": "string",
+    "order_id": "string",
+    "device_name": "string",
+    "agent": "string",
+    # Note: Use pd.to_datetime separately for datetime columns
+    }
+
     ordered_sources = [col for col in column_mapping.keys() if col in df.columns]
     st.write("Columns successfully matched from your mapping:", ordered_sources)
 
     if ordered_sources:
       # Extract and rename columns preserving the exact specified order
       transformed_df = df[ordered_sources].rename(columns=column_mapping)
+      valid_types = {col: dtype for col, dtype in type_mapping.items() if col in transformed_df.columns}
+      transformed_df = transformed_df.astype(valid_types)
+
+      if "order_date" in transformed_df.columns:
+        transformed_df["order_date"] = pd.to_datetime(transformed_df["order_date"], errors="coerce")
 
       # Raw data preview toggle
       with st.expander("👀 Preview Cleaned Raw Data"):
