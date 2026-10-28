@@ -129,7 +129,7 @@ if uploaded_file is not None:
     "device_id": ("device_id", "string"),
     "sale_order_id": ("order_id", "string"),
     "device": ("device_name", "string"),
-    "order_started_on": ("order_date", lambda s: pd.to_datetime(s, errors="coerce")),
+    "order_started_on": ("order_date", lambda s: pd.to_datetime(s, errors="coerce").astype("string")),
     "agent_full_name": ("agent", "string"),
     }
 
