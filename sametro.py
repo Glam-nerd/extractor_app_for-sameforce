@@ -124,23 +124,13 @@ if uploaded_file is not None:
 
     # Define exact columns of interest and their target rename mapping
     column_mapping = {
-        "agent_username": "agent_id",
-        "customer_full_name": "customer_name",
-        "device_id": "device_id",
-        "sale_order_id": "order_id",
-        "device": "device_name",
-        "order_started_on": "order_date",
-        "agent_full_name": "agent",
-    }
-
-    type_mapping = {
-    "agent_id": "string",
-    "customer_name": "string",
-    "device_id": "string",
-    "order_id": "string",
-    "device_name": "string",
-    "agent": "string",
-    # Note: Use pd.to_datetime separately for datetime columns
+    "agent_username": ("agent_id", "string"),
+    "customer_full_name": ("customer_name", "string"),
+    "device_id": ("device_id", "string"),
+    "sale_order_id": ("order_id", "string"),
+    "device": ("device_name", "string"),
+    "order_started_on": ("order_date", lambda s: pd.to_datetime(s, errors="coerce")),
+    "agent_full_name": ("agent", "string"),
     }
 
     ordered_sources = [col for col in column_mapping.keys() if col in df.columns]
@@ -149,11 +139,7 @@ if uploaded_file is not None:
     if ordered_sources:
       # Extract and rename columns preserving the exact specified order
       transformed_df = df[ordered_sources].rename(columns=column_mapping)
-      valid_types = {col: dtype for col, dtype in type_mapping.items() if col in transformed_df.columns}
-      transformed_df = transformed_df.astype(valid_types)
-
-      if "order_date" in transformed_df.columns:
-        transformed_df["order_date"] = pd.to_datetime(transformed_df["order_date"], errors="coerce")
+      transformed_df["order_started_on"] = transformed_df["order_started_on"].astype("string")
 
       # Raw data preview toggle
       with st.expander("👀 Preview Cleaned Raw Data"):
