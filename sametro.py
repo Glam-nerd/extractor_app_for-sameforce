@@ -137,39 +137,46 @@ if uploaded_file is not None:
     st.write("Columns successfully matched from your mapping:", ordered_sources)
 
     if ordered_sources:
-      # Extract and rename columns preserving the exact specified order
-      transformed_df = df[ordered_sources].rename(columns=column_mapping)
-      transformed_df["order_started_on"] = transformed_df["order_started_on"].astype("string")
+    # Build transformed_df while applying target column names and types simultaneously
+        transformed_df = pd.DataFrame()
+
+        for src_col in ordered_sources:
+            target_name, dtype_or_func = column_mapping[src_col]
+            
+            if callable(dtype_or_func):
+                transformed_df[target_name] = dtype_or_func(df[src_col])
+            else:
+                transformed_df[target_name] = df[src_col].astype(dtype_or_func)
 
       # Raw data preview toggle
-      with st.expander("👀 Preview Cleaned Raw Data"):
-        st.dataframe(df.head())
+        with st.expander("👀 Preview Cleaned Raw Data"):
+            st.dataframe(df.head())
 
-      # Main transformed data view
-      st.subheader("✨ Transformed & Mapped Data Preview")
-      st.dataframe(transformed_df, use_container_width=True)
+        # Main transformed data view
+        st.subheader("✨ Transformed & Mapped Data Preview")
+        st.dataframe(transformed_df, use_container_width=True)
 
-      st.divider()
+        st.divider()
 
       # --- STEP 3: LOCAL DOWNLOAD FOR EXTRACTED DATA ---
-      st.subheader("📥 Local Download")
-      csv_data = transformed_df.to_csv(index=False).encode("utf-8")
-      st.download_button(
-          label="📥 Download Extracted & Cleaned Data as CSV",
-          data=csv_data,
-          file_name="extracted_and_mapped_data.csv",
-          mime="text/csv",
-      )
-
-      # Check if any expected columns were missing
-      missing_cols = [
-          orig for orig in column_mapping.keys() if orig not in df.columns
-      ]
-      if missing_cols:
-        st.warning(
-            f"⚠️ Note: The following expected columns were not found in your"
-            f" file and were skipped: `{missing_cols}`"
+        st.subheader("📥 Local Download")
+        csv_data = transformed_df.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label="📥 Download Extracted & Cleaned Data as CSV",
+            data=csv_data,
+            file_name="extracted_and_mapped_data.csv",
+            mime="text/csv",
         )
+
+        # Check if any expected columns were missing
+        missing_cols = [
+            orig for orig in column_mapping.keys() if orig not in df.columns
+        ]
+        if missing_cols:
+            st.warning(
+                f"⚠️ Note: The following expected columns were not found in your"
+                f" file and were skipped: `{missing_cols}`"
+            )
     else:
       st.error(
           "❌ None of the expected columns of interest were found in your"
