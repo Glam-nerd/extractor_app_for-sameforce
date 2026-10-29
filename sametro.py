@@ -124,12 +124,12 @@ if uploaded_file is not None:
 
     # Define exact columns of interest and their target rename mapping
     column_mapping = {
-    "agent_username": ("agent_id", "string"),
-    "customer_full_name": ("customer_name", "string"),
+    "agent_username": ("Agent Id", "string"),
+    "customer_full_name": ("Customer", "string"),
     "device_id": ("device_id", "string"),
-    "sale_order_id": ("order_id", "string"),
-    "device": ("device_name", "string"),
-    "order_started_on": ("order_date", lambda s: pd.to_datetime(s, errors="coerce").astype("string")),
+    "sale_order_id": ("order_sr_id", "string"),
+    "device": ("device", "string"),
+    "order_started_on": ("order_start_date", lambda s: pd.to_datetime(s, errors="coerce").astype("string")),
     "agent_full_name": ("agent", "string"),
     }
 
